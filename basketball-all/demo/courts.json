@@ -1,0 +1,122 @@
+[
+ {
+  "id": "mangwon-yusuji",
+  "name": "망원유수지 농구장",
+  "area": "마포",
+  "address": "마포구 월드컵로25길 190 (망원유수지체육공원)",
+  "hoops": "농구장 3면",
+  "surface": "",
+  "lights": "",
+  "phone": "02-3153-9873",
+  "map_query": "망원유수지체육공원 농구장",
+  "note": "상시 개방 · 주차 · 화장실 · 우천·기상특보 시 사용 제한"
+ },
+ {
+  "id": "hg-mangwon",
+  "name": "망원한강공원 농구장",
+  "area": "한강",
+  "address": "망원한강공원",
+  "hoops": "골대 4개 (풀코트 2)",
+  "surface": "고무",
+  "lights": "조명 있음",
+  "phone": "02-3780-0601",
+  "map_query": "망원한강공원 농구장",
+  "note": "화장실 · 급수대"
+ },
+ {
+  "id": "hg-yanghwa",
+  "name": "양화한강공원 농구장",
+  "area": "한강",
+  "address": "양화한강공원",
+  "hoops": "",
+  "surface": "",
+  "lights": "",
+  "phone": "",
+  "map_query": "양화한강공원 농구장",
+  "note": ""
+ },
+ {
+  "id": "hg-nanji",
+  "name": "난지한강공원 농구장",
+  "area": "한강",
+  "address": "난지한강공원",
+  "hoops": "",
+  "surface": "",
+  "lights": "",
+  "phone": "02-3780-0611",
+  "map_query": "난지한강공원 농구장",
+  "note": ""
+ },
+ {
+  "id": "hg-ichon",
+  "name": "이촌한강공원 농구장",
+  "area": "한강",
+  "address": "이촌한강공원",
+  "hoops": "",
+  "surface": "",
+  "lights": "",
+  "phone": "02-3780-0551",
+  "map_query": "이촌한강공원 농구장",
+  "note": ""
+ },
+ {
+  "id": "hg-banpo",
+  "name": "반포한강공원 농구장",
+  "area": "한강",
+  "address": "반포한강공원",
+  "hoops": "",
+  "surface": "아스팔트",
+  "lights": "",
+  "phone": "02-3780-0541",
+  "map_query": "반포한강공원 농구장",
+  "note": "바닥이 거칠어 부상 주의. 인근 반포종합운동장을 더 많이 이용"
+ },
+ {
+  "id": "hg-jamwon",
+  "name": "잠원한강공원 농구장",
+  "area": "한강",
+  "address": "잠원한강공원",
+  "hoops": "",
+  "surface": "",
+  "lights": "",
+  "phone": "",
+  "map_query": "잠원한강공원 농구장",
+  "note": ""
+ },
+ {
+  "id": "hg-ttukseom",
+  "name": "뚝섬한강공원 농구장",
+  "area": "한강",
+  "address": "뚝섬한강공원",
+  "hoops": "골대 8개 (4개씩 2곳)",
+  "surface": "우레탄",
+  "lights": "",
+  "phone": "",
+  "map_query": "뚝섬한강공원 농구장",
+  "note": "뚝섬역 쪽과 먼 쪽 두 곳으로 나뉨 · 장애인 전용 농구장 별도"
+ },
+ {
+  "id": "hg-jamsil",
+  "name": "잠실한강공원 농구장",
+  "area": "한강",
+  "address": "잠실한강공원",
+  "hoops": "",
+  "surface": "",
+  "lights": "",
+  "phone": "02-3708-0511",
+  "map_query": "잠실한강공원 농구장",
+  "note": ""
+ },
+ {
+  "id": "hg-gwangnaru",
+  "name": "광나루한강공원 농구장",
+  "area": "한강",
+  "address": "광나루한강공원",
+  "hoops": "",
+  "surface": "",
+  "lights": "",
+  "phone": "02-3780-0501",
+  "map_query": "광나루한강공원 농구장",
+  "note": ""
+ }
+]

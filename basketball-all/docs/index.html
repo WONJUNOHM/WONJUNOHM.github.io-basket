@@ -1,0 +1,793 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<meta name="color-scheme" content="light">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="코트 한눈에">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<title>코트 한눈에</title>
+<style>
+:root{
+  --bg:#fff;--s1:#f5f6f8;--s2:#eceef2;--line:#eceef1;--ink:#17191d;--sub:#6f7782;--faint:#aab0b9;
+  --accent:#e8470c;--accent-soft:#fff1eb;--on:#fff;
+  --calm:#0f9d58;--calm-soft:#e6f6ee;--mid:#d97706;--mid-soft:#fff4de;--busy:#dc2626;--busy-soft:#fdeaea;--unk:#8b929c;--unk-soft:#eff0f3;
+  --sans:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--sans);letter-spacing:-.015em;word-break:keep-all;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0;text-align:inherit}
+input,select{font:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+.app{max-width:480px;margin:0 auto;min-height:100dvh;position:relative;padding-bottom:calc(86px + env(safe-area-inset-bottom));background:var(--bg)}
+@media (min-width:520px){body{background:#e9ebef}.app{box-shadow:0 0 0 1px var(--line)}}
+.n{font-variant-numeric:tabular-nums}
+
+/* 상단·하단 */
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:8px;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.brand{font-weight:800;font-size:19px;letter-spacing:-.04em;flex:1;display:flex;align-items:center;gap:7px}
+.brand i{width:20px;height:20px;border-radius:50%;background:var(--accent);display:inline-block;position:relative}
+.brand i:before{content:"";position:absolute;inset:0;border-radius:50%;background:linear-gradient(90deg,transparent 46%,rgba(255,255,255,.9) 46% 54%,transparent 54%)}
+.ib{height:36px;min-width:36px;padding:0 8px;display:grid;place-items:center;border-radius:18px;font-weight:700;font-size:13px;color:var(--ink)}
+.ib:active{background:var(--s1)}
+.ib svg{width:22px;height:22px}
+.ib.me{background:var(--s1);padding:0 13px}
+.ttl{font-weight:800;font-size:17px;flex:1;letter-spacing:-.03em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-content:center;pointer-events:none}
+.nav>div{pointer-events:auto;width:100%;max-width:480px;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding:7px 6px calc(7px + env(safe-area-inset-bottom))}
+.nav button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;font-size:11px;font-weight:600;color:var(--faint);position:relative;text-align:center}
+.nav svg{width:24px;height:24px}
+.nav button.on{color:var(--ink)}
+.nav button.on svg{color:var(--accent)}
+.nav b{position:absolute;top:-1px;left:calc(50% + 7px);min-width:17px;height:17px;border-radius:9px;background:var(--accent);color:var(--on);font-size:10.5px;display:grid;place-items:center;padding:0 4px}
+
+/* 공통 */
+.pad{padding:0 16px}
+.h1{margin:6px 16px 0;font-size:25px;line-height:1.3;font-weight:800;letter-spacing:-.045em}
+.lead{margin:6px 16px 0;font-size:14px;color:var(--sub)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:14px 16px 4px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;height:36px;padding:0 15px;border-radius:18px;border:1px solid var(--s2);font-weight:600;font-size:14px;color:var(--ink);background:var(--bg);display:inline-flex;align-items:center;gap:5px}
+.chip.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.chip.acc.on{background:var(--accent);border-color:var(--accent)}
+.sec{display:flex;align-items:center;justify-content:space-between;margin:30px 16px 0}
+.sec h3{margin:0;font-size:18px;font-weight:800;letter-spacing:-.04em}
+.sec h3 em{font-style:normal;color:var(--accent);margin-left:5px}
+.sec button{font-size:13px;font-weight:600;color:var(--sub)}
+.hint{margin:6px 16px 0;font-size:12.5px;color:var(--sub);line-height:1.6}
+.sep{height:8px;background:var(--s1);margin:26px 0 0}
+.tag{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:5px;font-size:11.5px;font-weight:700;background:var(--s1);color:var(--sub)}
+.tag.calm{background:var(--calm-soft);color:var(--calm)}.tag.mid{background:var(--mid-soft);color:var(--mid)}.tag.busy{background:var(--busy-soft);color:var(--busy)}.tag.unk{background:var(--unk-soft);color:var(--unk)}.tag.acc{background:var(--accent-soft);color:var(--accent)}
+.calm{color:var(--calm)}.mid{color:var(--mid)}.busy{color:var(--busy)}.unk{color:var(--unk)}
+.empty{padding:44px 16px;text-align:center;color:var(--sub);font-size:14px}
+.empty b{display:block;font-size:16px;color:var(--ink);margin-bottom:4px;letter-spacing:-.03em}
+.btn{display:flex;align-items:center;justify-content:center;width:100%;height:54px;border-radius:12px;background:var(--accent);color:var(--on);font-weight:800;font-size:16px;letter-spacing:-.02em}
+.btn:active{filter:brightness(.94)}
+.btn.line{background:var(--bg);color:var(--ink);border:1px solid var(--s2)}
+.btn.dark{background:var(--ink)}
+.btn.sm{height:46px;font-size:15px;border-radius:10px}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.fab{position:fixed;right:max(16px,calc(50% - 224px));bottom:calc(82px + env(safe-area-inset-bottom));z-index:25;background:var(--ink);color:var(--bg);height:48px;padding:0 20px 0 16px;border-radius:24px;font-weight:700;font-size:14.5px;display:flex;align-items:center;gap:6px;box-shadow:0 6px 20px rgba(0,0,0,.22)}
+
+/* 홈: 추천 카드 + 코트 목록 */
+.pick{margin:8px 16px 0;border-radius:18px;background:var(--s1);display:flex;overflow:hidden;align-items:stretch;min-height:116px}
+.pick .tx{flex:1;padding:16px;display:flex;flex-direction:column;justify-content:center;min-width:0}
+.pick small{font-size:12.5px;color:var(--sub);font-weight:600}
+.pick strong{display:block;font-size:19px;line-height:1.3;font-weight:800;letter-spacing:-.04em;margin:3px 0 6px}
+.pick .tx div{font-size:13.5px}
+.pick img{width:118px;object-fit:cover;filter:grayscale(.1)}
+.crow{display:block;width:100%;padding:18px 16px;border-bottom:1px solid var(--line)}
+.crow:active{background:var(--s1)}
+.crow .r1{display:flex;align-items:center;gap:8px}
+.cn{font-weight:700;font-size:17px;letter-spacing:-.035em;flex:1;min-width:0}
+.cm{font-size:13px;color:var(--sub);margin-top:4px}
+.cm em{font-style:normal;color:var(--accent);font-weight:700}
+.cnum{font-size:15px;font-weight:800;white-space:nowrap}
+.seg{display:flex;gap:3px;margin-top:12px}
+.seg i{flex:1;height:6px;background:var(--s2);border-radius:3px}
+.seg.calm i.f{background:var(--calm)}.seg.mid i.f{background:var(--mid)}.seg.busy i.f{background:var(--busy)}.seg.unk i.f{background:var(--unk)}
+.seg.lg i{height:10px;border-radius:5px}
+.notes{padding:18px 16px;font-size:12.5px;color:var(--sub);line-height:1.7}
+
+/* 코트 상세 */
+.sum{margin:6px 16px 0;padding:20px;border-radius:20px;background:var(--s1)}
+.sum .top1{display:flex;align-items:center;justify-content:space-between}
+.sum .area{font-size:13px;color:var(--sub);font-weight:600}
+.bigrow{display:flex;align-items:baseline;gap:6px;margin-top:12px}
+.bigrow b{font-size:68px;line-height:1;font-weight:800;letter-spacing:-.06em}
+.bigrow span{font-size:20px;font-weight:700;color:var(--sub)}
+.sum .seg{margin-top:16px}
+.fresh{font-size:13px;color:var(--sub);margin-top:12px}
+.tg{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.cond{display:flex;flex-wrap:wrap;gap:8px;padding:12px 16px 0}
+.kv{display:grid;grid-template-columns:70px 1fr;margin:8px 16px 0;font-size:14.5px}
+.kv dt,.kv dd{padding:12px 0;border-bottom:1px solid var(--line);margin:0}
+.kv dt{color:var(--sub)}.kv dd{font-weight:600}
+.links{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 16px 0}
+.links a,.links span{height:44px;border:1px solid var(--s2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13.5px}
+.chart{display:flex;align-items:flex-end;gap:4px;height:100px;margin:16px 16px 0}
+.chart i{flex:1;background:var(--s2);min-height:4px;border-radius:3px 3px 0 0}
+.chart i.on{background:var(--accent)}
+.axis{display:flex;justify-content:space-between;margin:6px 16px 0;color:var(--sub);font-size:11.5px}
+
+/* 게임 */
+.dates{display:flex;gap:4px;overflow-x:auto;padding:10px 12px 6px;scrollbar-width:none;position:sticky;top:calc(56px + env(safe-area-inset-top));z-index:15;background:rgba(255,255,255,.96);backdrop-filter:blur(10px)}
+.dates::-webkit-scrollbar{display:none}
+.dt{flex:none;width:48px;padding:8px 0 7px;border-radius:12px;text-align:center;position:relative}
+.dt span{display:block;font-size:11.5px;color:var(--sub);font-weight:600}
+.dt b{display:block;font-size:18px;font-weight:700;margin-top:1px}
+.dt.sat span,.dt.sat b{color:#2f6bd9}.dt.sun span,.dt.sun b{color:var(--busy)}
+.dt.on{background:var(--ink)}.dt.on span,.dt.on b{color:var(--bg)}
+.dt i{position:absolute;bottom:3px;left:50%;margin-left:-2px;width:4px;height:4px;border-radius:50%;background:var(--accent)}
+.dt.on i{background:var(--bg)}
+.tgl{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 4px;font-size:13px;color:var(--sub)}
+.sw{width:44px;height:26px;border-radius:13px;background:var(--s2);position:relative;transition:.15s}
+.sw:after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:.15s}
+.sw.on{background:var(--accent)}.sw.on:after{left:21px}
+.game{padding:18px 16px;border-bottom:1px solid var(--line)}
+.g1{display:flex;gap:14px}
+.gt{width:54px;flex:none}
+.gt b{display:block;font-size:22px;line-height:1.1;font-weight:800;letter-spacing:-.04em}
+.gt span{display:block;font-size:12px;color:var(--sub);margin-top:2px;font-weight:600}
+.gm{flex:1;min-width:0}
+.gm h4{margin:0;font-size:16.5px;line-height:1.4;font-weight:700;letter-spacing:-.035em}
+.gm .meta{font-size:13px;color:var(--sub);margin-top:3px}
+.meta a{text-decoration:underline;text-underline-offset:2px}
+.gm .tg{margin-top:8px}
+.gs{flex:none;text-align:right}
+.gs .tag{margin-bottom:6px}
+.gs small{display:block;font-size:12.5px;color:var(--sub);font-weight:600}
+.gs small b{color:var(--ink);font-size:14px}
+.pbar{height:4px;background:var(--s2);border-radius:2px;margin:14px 0 10px;overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--accent);border-radius:2px}
+.pbar.full i{background:var(--faint)}
+.names{font-size:13px;color:var(--sub)}
+.acts{display:flex;gap:8px;margin-top:12px;align-items:center}
+.b{height:40px;padding:0 18px;border-radius:10px;font-weight:700;font-size:14px;border:1px solid var(--s2);display:inline-flex;align-items:center;justify-content:center}
+.b.p{background:var(--accent);border-color:var(--accent);color:var(--on);flex:1}
+.b.g{flex:1;color:var(--sub)}
+.b.t{border:0;color:var(--sub);padding:0 6px;height:32px;font-weight:600;font-size:13px;text-decoration:underline;text-underline-offset:3px}
+
+/* 착장 */
+.fit{padding:18px 16px;border-bottom:1px solid var(--line)}
+.fit .ph{aspect-ratio:4/5;background:var(--s1);margin:0 0 14px;overflow:hidden;border-radius:14px}
+.fit .ph img{width:100%;height:100%;object-fit:cover;display:block}
+.shoe{font-weight:800;font-size:19px;line-height:1.3;letter-spacing:-.04em}
+.shoe small{font-size:13px;color:var(--sub);margin-left:8px;font-weight:600}
+.grip{display:flex;align-items:center;gap:3px;margin-top:8px}
+.grip span{font-size:12.5px;color:var(--sub);margin-right:7px}
+.grip i{width:20px;height:6px;background:var(--s2);border-radius:3px}
+.grip i.f{background:var(--accent)}
+.outfit{display:grid;grid-template-columns:52px 1fr;margin:12px 0 0;font-size:14px}
+.outfit dt{font-size:12.5px;color:var(--sub);font-weight:600;padding:2px 0}
+.outfit dd{margin:0;padding:2px 0}
+.quote{margin:10px 0 0;font-size:14.5px;line-height:1.6;background:var(--s1);border-radius:10px;padding:10px 12px}
+.ft{display:flex;align-items:center;gap:10px;margin-top:12px}
+.ft .meta{flex:1;font-size:12.5px;color:var(--sub);min-width:0}
+.like{display:inline-flex;align-items:center;gap:5px;height:34px;padding:0 13px;border:1px solid var(--s2);border-radius:17px;font-weight:700;font-size:13.5px}
+.like svg{width:15px;height:15px}
+.like.on{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.rank{margin:6px 16px 0}
+.rk{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.rk .no{width:22px;font-weight:800;color:var(--accent);font-size:16px}
+.rk b{flex:1;font-weight:700}.rk span{font-size:12.5px;color:var(--sub)}
+.guide{margin:12px 16px 0;background:var(--s1);border-radius:14px}
+.guide div{padding:14px 16px;font-size:13.5px;color:var(--sub);line-height:1.65}
+.guide div+div{border-top:1px solid var(--bg)}
+.guide b{display:block;color:var(--ink);margin-bottom:2px}
+.banner{margin:6px 16px 0;height:128px;border-radius:18px;overflow:hidden}
+.banner img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* 시트 */
+.veil{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center;animation:fade .16s}
+.sheet{background:var(--bg);width:100%;max-width:480px;padding:10px 16px calc(20px + env(safe-area-inset-bottom));max-height:92dvh;overflow:auto;border-radius:22px 22px 0 0;animation:up .2s ease-out}
+.sheet:before{content:"";display:block;width:38px;height:4px;border-radius:2px;background:var(--s2);margin:0 auto 14px}
+.sheet h4{margin:0;font-size:21px;letter-spacing:-.045em;font-weight:800}
+.sheet .sub{color:var(--sub);font-size:13.5px;margin-top:3px}
+.field{display:block;margin-top:16px}
+.field>span{display:block;font-size:13px;font-weight:700;margin-bottom:7px}
+.in{width:100%;background:var(--s1);border:1.5px solid transparent;border-radius:10px;padding:13px;outline:none;font-size:16px}
+.in:focus{border-color:var(--accent);background:var(--bg)}
+select.in{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--sub) 50%),linear-gradient(135deg,var(--sub) 50%,transparent 50%);background-position:calc(100% - 20px) 55%,calc(100% - 15px) 55%;background-size:5px 5px;background-repeat:no-repeat}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opts{display:flex;gap:6px;flex-wrap:wrap}
+.opts button{height:40px;padding:0 15px;border-radius:10px;background:var(--s1);font-weight:600;font-size:14px;border:1.5px solid transparent}
+.opts button.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.step{display:flex;align-items:center;justify-content:center;gap:24px;margin:20px 0 10px}
+.step button{width:54px;height:54px;border-radius:50%;background:var(--s1);font-size:26px;font-weight:500;text-align:center}
+.step output{font-size:76px;font-weight:800;min-width:110px;text-align:center;letter-spacing:-.06em;line-height:1}
+.quick{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.quick button{min-width:44px;height:36px;border-radius:18px;background:var(--s1);font-weight:700;font-size:14px;text-align:center}
+.photo{display:flex;align-items:center;gap:12px}
+.photo .pv{width:64px;height:80px;background:var(--s1);border-radius:10px;overflow:hidden;display:grid;place-items:center;color:var(--faint);font-size:11px}
+.photo .pv img{width:100%;height:100%;object-fit:cover}
+.toast{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:90;background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:22px;font-weight:600;font-size:14px;animation:fade .2s;max-width:90vw;text-align:center}
+.skel{height:84px;margin:0 16px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,transparent,rgba(0,0,0,.04),transparent);background-size:200% 100%;animation:sh 1.4s infinite}
+@keyframes fade{from{opacity:0}}@keyframes up{from{transform:translateY(30px);opacity:.5}}@keyframes sh{from{background-position:200% 0}to{background-position:-200% 0}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+.demo{background:#17191d;color:#fff;font-size:12.5px;line-height:1.5;padding:9px 16px;display:flex;gap:10px;align-items:center}.demo span{flex:1}.demo button{color:#ffb59a;font-weight:700;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}</style>
+</head>
+<body>
+<div class="app"><div class="demo"><span>체험용 데모입니다. 입력한 내용은 이 브라우저에만 저장되며 다른 사람과 공유되지 않습니다. "예시"가 붙은 항목은 샘플 데이터입니다.</span><button onclick="if(confirm('데모 데이터를 처음 상태로 되돌리시겠습니까?'))__resetDemo()">초기화</button></div>
+  <div class="top" id="top"></div>
+  <main id="view"></main>
+</div>
+<button class="fab" id="fab" hidden></button>
+<nav class="nav"><div id="nav"></div></nav>
+
+<script>
+/* 체험용 데모 백엔드: 서버(FastAPI) 없이 브라우저 localStorage 로 api/* 요청을 처리한다.
+   main.py 의 규칙(혼잡도 계산, 만료 시간, 검증)을 그대로 옮겼다. */
+(function () {
+  const COURTS = [{"id": "mangwon-yusuji", "name": "망원유수지 농구장", "area": "마포", "address": "마포구 월드컵로25길 190 (망원유수지체육공원)", "hoops": "농구장 3면", "surface": "", "lights": "", "phone": "02-3153-9873", "map_query": "망원유수지체육공원 농구장", "note": "상시 개방 · 주차 · 화장실 · 우천·기상특보 시 사용 제한"}, {"id": "hg-mangwon", "name": "망원한강공원 농구장", "area": "한강", "address": "망원한강공원", "hoops": "골대 4개 (풀코트 2)", "surface": "고무", "lights": "조명 있음", "phone": "02-3780-0601", "map_query": "망원한강공원 농구장", "note": "화장실 · 급수대"}, {"id": "hg-yanghwa", "name": "양화한강공원 농구장", "area": "한강", "address": "양화한강공원", "hoops": "", "surface": "", "lights": "", "phone": "", "map_query": "양화한강공원 농구장", "note": ""}, {"id": "hg-nanji", "name": "난지한강공원 농구장", "area": "한강", "address": "난지한강공원", "hoops": "", "surface": "", "lights": "", "phone": "02-3780-0611", "map_query": "난지한강공원 농구장", "note": ""}, {"id": "hg-ichon", "name": "이촌한강공원 농구장", "area": "한강", "address": "이촌한강공원", "hoops": "", "surface": "", "lights": "", "phone": "02-3780-0551", "map_query": "이촌한강공원 농구장", "note": ""}, {"id": "hg-banpo", "name": "반포한강공원 농구장", "area": "한강", "address": "반포한강공원", "hoops": "", "surface": "아스팔트", "lights": "", "phone": "02-3780-0541", "map_query": "반포한강공원 농구장", "note": "바닥이 거칠어 부상 주의. 인근 반포종합운동장을 더 많이 이용"}, {"id": "hg-jamwon", "name": "잠원한강공원 농구장", "area": "한강", "address": "잠원한강공원", "hoops": "", "surface": "", "lights": "", "phone": "", "map_query": "잠원한강공원 농구장", "note": ""}, {"id": "hg-ttukseom", "name": "뚝섬한강공원 농구장", "area": "한강", "address": "뚝섬한강공원", "hoops": "골대 8개 (4개씩 2곳)", "surface": "우레탄", "lights": "", "phone": "", "map_query": "뚝섬한강공원 농구장", "note": "뚝섬역 쪽과 먼 쪽 두 곳으로 나뉨 · 장애인 전용 농구장 별도"}, {"id": "hg-jamsil", "name": "잠실한강공원 농구장", "area": "한강", "address": "잠실한강공원", "hoops": "", "surface": "", "lights": "", "phone": "02-3708-0511", "map_query": "잠실한강공원 농구장", "note": ""}, {"id": "hg-gwangnaru", "name": "광나루한강공원 농구장", "area": "한강", "address": "광나루한강공원", "hoops": "", "surface": "", "lights": "", "phone": "02-3780-0501", "map_query": "광나루한강공원 농구장", "note": ""}];
+  const KEY = 'court-demo-v1', MIN = 60e3, HOUR = 36e5;
+  const LEVELS = ['입문', '초급', '중급', '상급', '누구나'], FORMATS = ['3vs3', '5vs5', '자유'];
+  const COND_TAGS = {lights_on: '조명 켜짐', lights_off: '조명 꺼짐', wet: '바닥 젖음', waiting: '대기팀 있음', ball: '공 빌려줌'};
+  const HIDE_AT = 3;
+  const realFetch = window.fetch.bind(window);
+  const nowMs = () => Date.now();
+  const kstStr = (ms = nowMs()) => new Date(ms + 9 * HOUR).toISOString().slice(0, 16).replace('T', ' ');
+  const agoMin = t => Math.max(0, Math.floor((nowMs() - t) / MIN));
+  const mem = {};
+  const load = () => { try { const s = localStorage.getItem(KEY); if (s) return JSON.parse(s); } catch (e) {} return mem.s || null; };
+  const save = s => { mem.s = s; try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) { throw new HttpError(400, '저장 공간이 부족합니다. 하단의 초기화를 눌러 주십시오'); } };
+  class HttpError extends Error { constructor(code, msg) { super(msg); this.code = code; } }
+
+  function seed() {
+    const t = nowMs(), s = {seq: 100, checkins: [], reports: [], conds: [], posts: [], fits: [], fitReported: []};
+    const ci = (c, n, m) => s.checkins.push({court: c, nick: n, t: t - m * MIN, out: false});
+    ci('hg-mangwon', '예시-민수', 40); ci('hg-mangwon', '예시-지훈', 70); ci('hg-mangwon', '예시-서연', 95);
+    s.reports.push({court: 'hg-mangwon', count: 7, t: t - 5 * MIN}, {court: 'hg-ttukseom', count: 11, t: t - 12 * MIN},
+      {court: 'hg-banpo', count: 2, t: t - 20 * MIN}, {court: 'mangwon-yusuji', count: 4, t: t - 8 * MIN});
+    s.conds.push({court: 'hg-mangwon', tag: 'lights_on', t: t - 30 * MIN}, {court: 'hg-banpo', tag: 'wet', t: t - 15 * MIN});
+    const mk = (id, court, title, addMin, cap, fmt, level, joined, nick) => s.posts.push({id, court, nick, title, play_at: kstStr(t + addMin * MIN), capacity: cap, fmt, level, link: '', created: t - 25 * MIN, joined});
+    mk(1, 'hg-mangwon', '예시 · 5대5 한 판 뛰실 분', 120, 10, '5vs5', '중급', ['예시-민수', '예시-지훈', '예시-서연', '예시-도윤', '예시-하준', '예시-유나'], '예시-민수');
+    mk(2, 'mangwon-yusuji', '예시 · 3대3 입문자 환영', 26 * 60, 6, '3vs3', '입문', ['예시-가온', '예시-나래', '예시-다온'], '예시-가온');
+    mk(3, 'hg-ttukseom', '예시 · 자유 슈팅 + 미니게임', 5 * 60, 8, '자유', '누구나', ['예시-라온', '예시-마루', '예시-바다', '예시-사랑', '예시-아란', '예시-자람', '예시-차온'], '예시-라온');
+    s.fits.push({id: 1, court: 'hg-banpo', nick: '예시-지훈', shoes: '나이키 KD 16', size: '270', top: '흰 슬리브리스', bottom: '검정 반바지', extra: '발목 보호대', comment: '아스팔트라 밑창이 빨리 닳는 느낌입니다.', grip: 3, photo: '', created: t - 3 * HOUR, likes: ['예시-서연'], reports: 0},
+      {id: 2, court: 'hg-mangwon', nick: '예시-서연', shoes: '아디다스 하든 8', size: '250', top: '회색 반팔', bottom: '네이비 반바지', extra: '', comment: '고무 바닥이라 접지가 좋았습니다.', grip: 5, photo: '', created: t - 26 * HOUR, likes: [], reports: 0});
+    return s;
+  }
+  let S = load() || seed(); save(S);
+
+  const V = {
+    nick(s) { s = (s || '').trim(); if (!s || s.length > 20) throw new HttpError(400, '닉네임을 1~20자로 입력해 주십시오'); return s; },
+    court(id) { const c = COURTS.find(x => x.id === id); if (!c) throw new HttpError(404, '없는 코트입니다'); return c; },
+  };
+  const level = n => n < 5 ? {key: 'calm', label: '한산', hint: '여유가 있습니다'} : n < 10 ? {key: 'mid', label: '보통', hint: '5대5 가능한 인원입니다'} : {key: 'busy', label: '혼잡', hint: '대기가 있을 수 있습니다'};
+  function status(cid) {
+    const t = nowMs();
+    const nIn = S.checkins.filter(x => x.court === cid && !x.out && x.t > t - 3 * HOUR).length;
+    const r = S.reports.filter(x => x.court === cid && x.t > t - 30 * MIN).sort((a, b) => b.t - a.t)[0];
+    const n = Math.max(nIn, r ? r.count : 0);
+    return {checked_in: nIn, reported: r ? r.count : null, report_ago: r ? agoMin(r.t) : null, people: n, ...level(n)};
+  }
+  function conditions(cid) {
+    const t = nowMs(), g = {};
+    S.conds.filter(x => x.court === cid && x.t > t - 2 * HOUR).forEach(x => { const o = g[x.tag] || (g[x.tag] = {n: 0, ago: 1e9}); o.n++; o.ago = Math.min(o.ago, agoMin(x.t)); });
+    if (g.lights_on && g.lights_off) delete g[g.lights_on.ago > g.lights_off.ago ? 'lights_on' : 'lights_off'];
+    return Object.entries(g).map(([tag, v]) => ({tag, label: COND_TAGS[tag], ...v}));
+  }
+  const openPost = p => p.play_at > kstStr(nowMs() - 3 * HOUR);
+  const postView = p => ({id: p.id, court_id: p.court, nickname: p.nick, title: p.title, when_text: p.play_at.slice(11), need: p.capacity - 1, link: p.link, play_at: p.play_at,
+    capacity: p.capacity, level: p.level, fmt: p.fmt, created: '', court_name: V.court(p.court).name, ago: agoMin(p.created), joined: [...p.joined]});
+  const posts = f => S.posts.filter(p => openPost(p) && (!f || f(p))).sort((a, b) => a.play_at.localeCompare(b.play_at) || a.id - b.id).map(postView);
+  const fitView = f => ({id: f.id, court_id: f.court, nickname: f.nick, shoes: f.shoes, shoe_size: f.size, top: f.top, bottom: f.bottom, extra: f.extra, comment: f.comment, grip: f.grip,
+    photo: f.photo, reports: f.reports, court_name: f.court ? V.court(f.court).name : '', ago: agoMin(f.created), likes: f.likes.length, liked_by: [...f.likes]});
+  const fits = f => S.fits.filter(x => x.reports < HIDE_AT && (!f || f(x))).sort((a, b) => b.id - a.id).slice(0, 50).map(fitView);
+  function hourly(cid) {
+    const byH = {}, rep = S.reports.filter(x => x.court === cid), ci = S.checkins.filter(x => x.court === cid), avg = {};
+    rep.forEach(x => { const h = +kstStr(x.t).slice(11, 13); (byH[h] = byH[h] || []).push(x.count); });
+    Object.entries(byH).forEach(([h, a]) => avg[h] = a.reduce((p, c) => p + c, 0) / a.length);
+    const dh = {}; ci.forEach(x => { const k = kstStr(x.t), h = +k.slice(11, 13), d = k.slice(0, 10); dh[h] = dh[h] || {}; dh[h][d] = (dh[h][d] || 0) + 1; });
+    Object.entries(dh).forEach(([h, days]) => { const v = Object.values(days); avg[h] = Math.max(avg[h] || 0, v.reduce((p, c) => p + c, 0) / v.length); });
+    return {samples: rep.length + ci.length, hours: Array.from({length: 24}, (_, h) => Math.round((avg[h] || 0) * 10) / 10)};
+  }
+  function topShoes(cid) {
+    const g = {};
+    S.fits.filter(f => f.court === cid && f.reports < HIDE_AT).forEach(f => { const k = f.shoes.trim().toLowerCase(), o = g[k] || (g[k] = {shoes: f.shoes, n: 0, gs: [], id: 0}); o.n++; if (f.id > o.id) { o.id = f.id; o.shoes = f.shoes; } if (f.grip) o.gs.push(f.grip); });
+    return Object.values(g).sort((a, b) => b.n - a.n || b.id - a.id).slice(0, 3).map(o => ({shoes: o.shoes, n: o.n, grip: o.gs.length ? Math.round(o.gs.reduce((p, c) => p + c, 0) / o.gs.length * 10) / 10 : null}));
+  }
+
+  function route(method, path, q, body) {
+    let m;
+    if (method === 'GET') {
+      if (path === 'api/meta') return {levels: LEVELS, formats: FORMATS, now_kst: kstStr() + ':00'};
+      if (path === 'api/courts') return COURTS.map(c => ({...c, ...status(c.id), conditions: conditions(c.id), open_posts: S.posts.filter(p => p.court === c.id && openPost(p)).length}));
+      if ((m = path.match(/^api\/courts\/([^/]+)$/))) {
+        const c = V.court(m[1]), t = nowMs();
+        return {...c, ...status(c.id), conditions: conditions(c.id), people_list: S.checkins.filter(x => x.court === c.id && !x.out && x.t > t - 3 * HOUR).map(x => x.nick),
+          posts: posts(p => p.court === c.id), hourly: hourly(c.id), top_shoes: topShoes(c.id)};
+      }
+      if (path === 'api/posts') return posts();
+      if (path === 'api/fits') return fits(q.court_id ? f => f.court === q.court_id : null);
+      if (path === 'api/me') {
+        const n = (q.nickname || '').trim(), t = nowMs();
+        const ci = S.checkins.filter(x => x.nick === n && !x.out && x.t > t - 3 * HOUR).sort((a, b) => b.t - a.t)[0];
+        return {checkin: ci ? {court_id: ci.court, name: V.court(ci.court).name, ago: agoMin(ci.t)} : null, posts: posts(p => p.joined.includes(n))};
+      }
+      if (path === 'api/me/fits') return fits(f => f.nick === (q.nickname || '').trim());
+    } else {
+      if ((m = path.match(/^api\/courts\/([^/]+)\/(checkin|checkout|report|condition|posts)$/))) {
+        const c = V.court(m[1]), act = m[2];
+        if (act === 'checkin') { const n = V.nick(body.nickname); S.checkins.forEach(x => { if (x.nick === n && !x.out) x.out = true; }); S.checkins.push({court: c.id, nick: n, t: nowMs(), out: false}); }
+        else if (act === 'checkout') S.checkins.forEach(x => { if (x.court === c.id && x.nick === (body.nickname || '').trim() && !x.out) x.out = true; });
+        else if (act === 'report') { if (!(body.count >= 0 && body.count <= 40)) throw new HttpError(400, '인원은 0~40명 사이로 입력해 주십시오'); S.reports.push({court: c.id, count: Math.floor(body.count), t: nowMs()}); }
+        else if (act === 'condition') { if (!COND_TAGS[body.tag]) throw new HttpError(400, '알 수 없는 상태입니다'); S.conds.push({court: c.id, tag: body.tag, t: nowMs()}); }
+        else {
+          const n = V.nick(body.nickname), title = (body.title || '').trim(), link = (body.link || '').trim();
+          if (!title || title.length > 60) throw new HttpError(400, '제목을 1~60자로 입력해 주십시오');
+          if (!(body.capacity >= 2 && body.capacity <= 30)) throw new HttpError(400, '전체 인원은 2~30명입니다');
+          if (!FORMATS.includes(body.fmt) || !LEVELS.includes(body.level)) throw new HttpError(400, '형식 또는 레벨이 올바르지 않습니다');
+          if (!/^\d{4}-\d{2}-\d{2}$/.test(body.play_date || '') || !/^([01]\d|2[0-3]):[0-5]\d$/.test(body.play_time || '')) throw new HttpError(400, '날짜와 시간을 확인해 주십시오');
+          if (link && !/^https:\/\/\S{3,200}$/.test(link)) throw new HttpError(400, '오픈채팅 링크는 https:// 로 시작해야 합니다');
+          const at = body.play_date + ' ' + body.play_time;
+          if (!(at > kstStr(nowMs() - 30 * MIN) && at < kstStr(nowMs() + 15 * 24 * HOUR))) throw new HttpError(400, '경기 시간은 지금부터 14일 안으로 정해 주십시오');
+          S.posts.push({id: ++S.seq, court: c.id, nick: n, title, play_at: at, capacity: Math.floor(body.capacity), fmt: body.fmt, level: body.level, link, created: nowMs(), joined: [n]});
+        }
+        return {ok: true};
+      }
+      if ((m = path.match(/^api\/posts\/(\d+)\/(join|leave|delete)$/))) {
+        const p = S.posts.find(x => x.id === +m[1]); if (!p) { if (m[2] === 'join') throw new HttpError(404, '없는 글입니다'); return {ok: true}; }
+        const n = (body.nickname || '').trim();
+        if (m[2] === 'join') { const nn = V.nick(n); if (!p.joined.includes(nn)) { if (p.joined.length >= p.capacity) throw new HttpError(400, '이미 마감된 게임입니다'); p.joined.push(nn); } }
+        else if (m[2] === 'leave') p.joined = p.joined.filter(x => x !== n);
+        else if (p.nick === n) S.posts = S.posts.filter(x => x !== p);
+        return {ok: true};
+      }
+      if (path === 'api/fits') {
+        const n = V.nick(body.nickname), shoes = (body.shoes || '').trim();
+        if (!shoes || shoes.length > 50) throw new HttpError(400, '신발 이름을 1~50자로 입력해 주십시오');
+        const grip = body.grip | 0; if (grip < 0 || grip > 5) throw new HttpError(400, '접지력은 1~5점입니다');
+        if (body.court_id) V.court(body.court_id);
+        if (body.photo && (!/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(body.photo) || body.photo.length > 900000)) throw new HttpError(400, '사진은 JPEG만, 용량이 너무 크면 올릴 수 없습니다');
+        const cl = (v, k) => (v || '').trim().slice(0, k);
+        S.fits.push({id: ++S.seq, court: body.court_id || '', nick: n, shoes: cl(shoes, 50), size: cl(body.shoe_size, 12), top: cl(body.top, 40), bottom: cl(body.bottom, 40), extra: cl(body.extra, 60), comment: cl(body.comment, 120), grip, photo: body.photo || '', created: nowMs(), likes: [], reports: 0});
+        return {ok: true};
+      }
+      if ((m = path.match(/^api\/fits\/(\d+)\/(like|report|delete)$/))) {
+        const f = S.fits.find(x => x.id === +m[1]); if (!f) return {ok: true};
+        if (m[2] === 'like') { const n = V.nick(body.nickname); f.likes = f.likes.includes(n) ? f.likes.filter(x => x !== n) : [...f.likes, n]; }
+        else if (m[2] === 'report') { if (!S.fitReported.includes(f.id)) { S.fitReported.push(f.id); f.reports++; } }
+        else if (f.nick === (body.nickname || '').trim()) S.fits = S.fits.filter(x => x !== f);
+        return {ok: true};
+      }
+    }
+    throw new HttpError(404, '찾을 수 없습니다');
+  }
+
+  window.fetch = async function (input, init = {}) {
+    const url = typeof input === 'string' ? input : input.url;
+    const u = new URL(url, 'http://demo.local/');
+    const path = u.pathname.replace(/^\/+/, '').replace(/^.*?(api\/)/, '$1');
+    if (!/^api\//.test(path)) return realFetch(input, init);
+    const method = (init.method || 'GET').toUpperCase(), q = Object.fromEntries(u.searchParams);
+    let body = {}; try { body = init.body ? JSON.parse(init.body) : {}; } catch (e) {}
+    try {
+      S = load() || S;
+      const out = route(method, path, q, body);
+      if (method !== 'GET') save(S);
+      return new Response(JSON.stringify(out), {status: 200, headers: {'Content-Type': 'application/json'}});
+    } catch (e) {
+      const code = e instanceof HttpError ? e.code : 500;
+      return new Response(JSON.stringify({detail: e instanceof HttpError ? e.message : '오류가 발생했습니다'}), {status: code, headers: {'Content-Type': 'application/json'}});
+    }
+  };
+  window.__resetDemo = () => { try { localStorage.removeItem(KEY); } catch (e) {} mem.s = null; location.reload(); };
+})();
+
+</script>
+<script>
+// 모든 경로는 상대 경로 (공개/프록시 주소 앞에 접두사가 붙기 때문)
+const $ = s => document.querySelector(s);
+const view = $('#view');
+const S = (d, w = 1.8) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+const I = {
+  court: S('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M12 5v14"/><circle cx="12" cy="12" r="2.6"/>'),
+  game: S('<rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>'),
+  fit: S('<path d="M3 15.5c0-1.6.9-2.6 2.6-2.8L9 9l2.8 2 4.7 1.1c2.2.5 4.5 1.4 4.5 4.1V18H3z"/><path d="M9 9l-.7 3.4"/>'),
+  me: S('<circle cx="12" cy="8.5" r="3.6"/><path d="M4.5 20c.8-3.8 3.7-6 7.5-6s6.7 2.2 7.5 6"/>'),
+  back: S('<path d="M15 5l-7 7 7 7"/>', 2.2),
+  share: S('<path d="M12 15V3.5M7.5 8L12 3.5 16.5 8M5 12.5V19a1 1 0 001 1h12a1 1 0 001-1v-6.5"/>'),
+  refresh: S('<path d="M20 11a8 8 0 10-2.4 5.7M20 4.5V11h-6.5"/>'),
+  heart: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-8-5.2-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 10c0 5.8-8 11-8 11z"/></svg>',
+  plus: S('<path d="M12 5v14M5 12h14"/>', 2.6)
+};
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let nickname = ''; try { nickname = localStorage.getItem('nick') || ''; } catch (e) {}
+const setNick = n => { nickname = n; try { localStorage.setItem('nick', n); } catch (e) {} };
+
+async function api(path, method = 'GET', body) {
+  let r;
+  try { r = await fetch(path, {method, headers: {'Content-Type': 'application/json'}, body: body ? JSON.stringify(body) : undefined}); }
+  catch (e) { throw new Error('서버에 연결할 수 없습니다'); }
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(typeof d.detail === 'string' ? d.detail : '요청에 실패했습니다');
+  return d;
+}
+function toast(m) { document.querySelectorAll('.toast').forEach(t => t.remove()); const t = document.createElement('div'); t.className = 'toast'; t.textContent = m; document.body.append(t); setTimeout(() => t.remove(), 2400); }
+const ago = m => m == null ? '' : m < 1 ? '방금' : m < 60 ? `${m}분 전` : m < 1440 ? `${Math.floor(m / 60)}시간 전` : `${Math.floor(m / 1440)}일 전`;
+// 한국 시간 기준 날짜 (UTC 필드에 +9h 를 더해서 읽는다)
+const kst = (add = 0) => new Date(Date.now() + 9 * 36e5 + add * 864e5);
+const ymd = d => d.toISOString().slice(0, 10);
+const WD = ['일', '월', '화', '수', '목', '금', '토'];
+const fmtDate = s => { const d = new Date(s + 'T00:00:00Z'); return `${d.getUTCMonth() + 1}월 ${d.getUTCDate()}일 (${WD[d.getUTCDay()]})`; };
+
+/* ---------- 시트 ---------- */
+let sheetOpen = false;
+function openSheet(html, bind) {
+  closeSheet();
+  const v = document.createElement('div'); v.className = 'veil'; v.id = 'veil';
+  v.innerHTML = `<div class="sheet" role="dialog" aria-modal="true">${html}</div>`;
+  v.addEventListener('mousedown', e => { if (e.target === v) closeSheet(); });
+  document.body.append(v); sheetOpen = true; bind && bind(v.firstChild);
+}
+function closeSheet() { const v = $('#veil'); if (v) v.remove(); sheetOpen = false; }
+addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
+// 버튼 묶음(단일 선택)
+function opts(el, list, val, onPick) {
+  el.innerHTML = list.map(x => `<button data-v="${esc(x)}" class="${x === val ? 'on' : ''}">${esc(x)}</button>`).join('');
+  el.querySelectorAll('button').forEach(b => b.onclick = () => { el.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); onPick(b.dataset.v); });
+}
+
+function nickSheet(then) {
+  openSheet(`<h4>닉네임 정하기</h4><div class="sub">코트에서 서로 부를 이름입니다. 가입은 필요하지 않습니다.</div>
+    <label class="field"><span>닉네임 (최대 20자)</span><input class="in" id="ni" maxlength="20" value="${esc(nickname)}" placeholder="예) 슛돌이" autocomplete="off"></label>
+    <div style="height:18px"></div><button class="btn" id="ns">저장</button>`, s => {
+    const go = () => { const v = s.querySelector('#ni').value.trim(); if (!v) return toast('닉네임을 입력해 주십시오'); setNick(v); closeSheet(); render(); then && then(); };
+    s.querySelector('#ns').onclick = go; s.querySelector('#ni').onkeydown = e => e.key === 'Enter' && go(); s.querySelector('#ni').focus();
+  });
+}
+const withNick = fn => nickname ? fn() : nickSheet(fn);
+async function act(fn, okMsg) { try { await fn(); okMsg && toast(okMsg); await render(); } catch (e) { toast(e.message); } }
+
+/* ---------- 조각 ---------- */
+function status(c) {
+  const known = c.checked_in > 0 || c.reported !== null;
+  return known ? {key: c.key, label: c.label, hint: c.hint, known} : {key: 'unk', label: '정보 없음', hint: '첫 제보를 남겨 주십시오', known};
+}
+const seg = (c, st, lg) => `<div class="seg ${st.key} ${lg ? 'lg' : ''}" aria-label="현재 ${c.people}명">${Array.from({length: 10}, (_, i) => `<i class="${i < Math.min(c.people, 10) ? 'f' : ''}"></i>`).join('')}</div>`;
+function freshness(c) {
+  const p = [];
+  if (c.checked_in) p.push(`체크인 ${c.checked_in}명`);
+  if (c.reported !== null) p.push(`제보 ${c.reported}명 · ${ago(c.report_ago)}`);
+  return p.join('  ·  ') || '아직 제보가 없습니다';
+}
+function courtRow(c) {
+  const st = status(c);
+  return `<button class="crow" data-go="c/${c.id}">
+    <div class="r1"><div class="cn">${esc(c.name)}</div><span class="cnum ${st.key}">${st.known ? c.people + '명' : ''}</span><span class="tag ${st.key}">${st.label}</span></div>
+    <div class="cm">${esc(c.area)} · ${st.known ? freshness(c) : '제보 없음'}${c.open_posts ? ` · <em>모집 ${c.open_posts}</em>` : ''}</div>
+    ${seg(c, st)}</button>`;
+}
+
+function gstate(p) {
+  const left = p.capacity - p.joined.length, now = ymd(kst()) + ' ' + kst().toISOString().slice(11, 16);
+  if (p.play_at && p.play_at <= now) return {key: 'unk', label: '진행중', left};
+  if (left <= 0) return {key: 'unk', label: '마감', left};
+  if (left <= 2) return {key: 'busy', label: '마감임박', left};
+  return {key: 'acc', label: '모집중', left};
+}
+function gameCard(p, showDate) {
+  const g = gstate(p), mine = nickname && p.joined.includes(nickname), owner = nickname && p.nickname === nickname, full = g.left <= 0;
+  const [d, t] = (p.play_at || ' ').split(' ');
+  return `<article class="game"><div class="g1">
+    <div class="gt"><b class="n">${esc(t || p.when_text)}</b>${showDate && d ? `<span>${esc(fmtDate(d).replace(/^\d+월 /, ''))}</span>` : ''}</div>
+    <div class="gm"><h4>${esc(p.title)}</h4>
+      <div class="meta"><a href="#/c/${esc(p.court_id)}">${esc(p.court_name)}</a></div>
+      <div class="tg">${p.fmt ? `<span class="tag">${esc(p.fmt)}</span>` : ''}${p.level ? `<span class="tag">${esc(p.level)}</span>` : ''}</div></div>
+    <div class="gs"><span class="tag ${g.key}">${g.label}</span><small><b class="n">${p.joined.length}</b>/${p.capacity}명</small></div></div>
+    <div class="pbar ${full ? 'full' : ''}"><i style="width:${Math.min(100, p.joined.length / p.capacity * 100)}%"></i></div>
+    <div class="names">${p.joined.map(esc).join(', ')} <span style="color:var(--faint)">· ${esc(p.nickname)} 모집 · ${ago(p.ago)}</span></div>
+    <div class="acts">
+      ${mine ? `<button class="b g" data-pid="${p.id}" data-act="leave">참가 취소</button>` : `<button class="b p" ${full || g.label === '진행중' ? 'disabled style="opacity:.4"' : ''} data-pid="${p.id}" data-act="join">${full ? '마감되었습니다' : '참가하기'}</button>`}
+      ${p.link ? `<a class="b" href="${esc(p.link)}" target="_blank" rel="noopener noreferrer">오픈채팅</a>` : ''}
+      ${owner ? `<button class="b t" data-pid="${p.id}" data-act="delete">삭제</button>` : ''}
+    </div></article>`;
+}
+function bindGames() {
+  view.querySelectorAll('[data-pid]').forEach(b => b.onclick = () => withNick(() => {
+    if (b.dataset.act === 'delete' && !confirm('이 모집글을 삭제하시겠습니까?')) return;
+    act(() => api(`api/posts/${b.dataset.pid}/${b.dataset.act}`, 'POST', {nickname}), b.dataset.act === 'join' ? '참가했습니다. 코트에서 뵙겠습니다' : null);
+  }));
+}
+
+function fitCard(f, showCourt = true) {
+  const liked = nickname && f.liked_by.includes(nickname), owner = nickname && f.nickname === nickname;
+  const rows = [['상의', f.top], ['하의', f.bottom], ['기타', f.extra]].filter(r => r[1]);
+  return `<article class="fit">
+    ${f.photo ? `<div class="ph"><img src="${esc(f.photo)}" alt="${esc(f.shoes)} 착장" loading="lazy"></div>` : ''}
+    <div class="shoe">${esc(f.shoes)}${f.shoe_size ? `<small>${esc(f.shoe_size)}</small>` : ''}</div>
+    ${f.grip ? `<div class="grip"><span>접지력</span>${[1, 2, 3, 4, 5].map(n => `<i class="${n <= f.grip ? 'f' : ''}"></i>`).join('')}</div>` : ''}
+    ${rows.length ? `<dl class="outfit">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join('')}</dl>` : ''}
+    ${f.comment ? `<p class="quote">${esc(f.comment)}</p>` : ''}
+    <div class="ft"><div class="meta">${showCourt && f.court_name ? `<a href="#/c/${esc(f.court_id)}" style="text-decoration:underline">${esc(f.court_name)}</a> · ` : ''}${esc(f.nickname)} · ${ago(f.ago)}</div>
+      ${owner ? `<button class="b t" data-fd="${f.id}">삭제</button>` : `<button class="b t" data-fr="${f.id}">신고</button>`}
+      <button class="like ${liked ? 'on' : ''}" data-fl="${f.id}" aria-label="좋아요">${I.heart}${f.likes}</button></div>
+  </article>`;
+}
+function bindFits() {
+  view.querySelectorAll('[data-fl]').forEach(b => b.onclick = () => withNick(() => act(() => api(`api/fits/${b.dataset.fl}/like`, 'POST', {nickname}))));
+  view.querySelectorAll('[data-fd]').forEach(b => b.onclick = () => { if (confirm('이 착장 글을 삭제하시겠습니까?')) act(() => api(`api/fits/${b.dataset.fd}/delete`, 'POST', {nickname})); });
+  view.querySelectorAll('[data-fr]').forEach(b => b.onclick = () => { if (confirm('부적절한 글로 신고하시겠습니까? 신고가 누적되면 자동으로 숨겨집니다.')) act(() => api(`api/fits/${b.dataset.fr}/report`, 'POST'), '신고했습니다'); });
+}
+const sec = (t, count, right = '') => `<div class="sec"><h3>${t}${count != null ? `<em>${count}</em>` : ''}</h3>${right}</div>`;
+function bindGo() { view.querySelectorAll('[data-go]').forEach(b => b.onclick = () => { location.hash = '#/' + b.dataset.go; }); }
+
+/* ---------- 상단·하단 ---------- */
+function topbar({title, back, right = ''} = {}) {
+  const t = $('#top');
+  t.innerHTML = back ? `<button class="ib" id="bk" aria-label="뒤로">${I.back}</button><div class="ttl">${esc(title)}</div>${right}`
+                     : `<div class="brand"><i></i>코트 한눈에</div>${right}`;
+  const b = $('#bk'); if (b) b.onclick = () => history.length > 1 ? history.back() : (location.hash = '#/');
+}
+function nav(tab, badge) {
+  const t = [['', '코트', I.court], ['games', '게임', I.game], ['fit', '착장', I.fit], ['me', '내 정보', I.me]];
+  $('#nav').innerHTML = t.map(([h, l, ic]) => `<button class="${tab === h ? 'on' : ''}" data-nav="${h}">${ic}${l}${h === 'games' && badge ? `<b>${badge}</b>` : ''}</button>`).join('');
+  $('#nav').querySelectorAll('[data-nav]').forEach(b => b.onclick = () => { location.hash = '#/' + b.dataset.nav; });
+}
+function fab(label, fn) { const f = $('#fab'); if (!label) { f.hidden = true; return; } f.hidden = false; f.innerHTML = I.plus.replace('<svg', '<svg width="18" height="18"') + label; f.onclick = fn; }
+const meBtn = () => `<button class="ib me" id="mb">${nickname ? esc(nickname.slice(0, 6)) : '닉네임'}</button>`;
+const bindMe = () => { const m = $('#mb'); if (m) m.onclick = () => nickSheet(); };
+
+/* ---------- 홈 ---------- */
+let courts = [], filter = '전체';
+const FILTERS = ['전체', '마포', '한강', '모집중'];
+async function loadCourts() { courts = await api('api/courts'); return courts; }
+
+async function homeView() {
+  topbar({right: `<button class="ib" id="rf" aria-label="새로고침">${I.refresh}</button>${meBtn()}`});
+  $('#rf').onclick = () => render().then(() => toast('새로고침했습니다')); bindMe(); fab(null);
+  if (!courts.length) view.innerHTML = '<div class="skel"></div>'.repeat(5);
+  await loadCourts();
+  const known = courts.filter(c => status(c).known), best = [...known].sort((a, b) => a.people - b.people)[0], games = courts.reduce((s, c) => s + c.open_posts, 0);
+  let list = courts.filter(c => filter === '전체' || (filter === '모집중' ? c.open_posts : c.area === filter));
+  list.sort((a, b) => (status(a).known === status(b).known ? a.people - b.people : status(a).known ? -1 : 1) || a.name.localeCompare(b.name, 'ko'));
+  view.innerHTML = `
+    <h1 class="h1">지금 어느 코트가<br>비어 있습니까?</h1>
+    <section class="pick" ${best ? `data-go="c/${best.id}" style="cursor:pointer"` : ''}>
+      <div class="tx"><small>${best ? '지금 가장 한산한 코트' : '아직 오늘 제보가 없습니다'}</small>
+        ${best ? `<strong>${esc(best.name)}</strong><div><span class="tag ${status(best).key}">${status(best).label}</span> <b class="n" style="margin-left:4px">${best.people}명</b></div>`
+               : `<strong>첫 제보를 남겨 주십시오</strong><div style="color:var(--sub)">도착하시면 체크인, 떠나실 때 체크아웃해 주십시오</div>`}</div>
+      <img src="img/overpass.jpg" alt=""></section>
+    <div class="chips">${FILTERS.map(f => `<button class="chip ${f === filter ? 'on' : ''}" data-f="${f}">${f}</button>`).join('')}</div>
+    <div style="margin-top:6px;border-top:1px solid var(--line)">${list.map(courtRow).join('') || `<div class="empty"><b>해당하는 코트가 없습니다</b>다른 필터를 선택해 주십시오</div>`}</div>
+    <p class="notes">혼잡도는 앱 사용자의 체크인(3시간 뒤 자동 해제)과 최근 30분 제보 중 큰 값입니다. 이용자가 늘수록 정확해집니다.</p>`;
+  view.querySelectorAll('[data-f]').forEach(b => b.onclick = () => { filter = b.dataset.f; render(); });
+  bindGo(); nav('', games);
+}
+
+/* ---------- 코트 상세 ---------- */
+function chart(h) {
+  if (h.samples < 5) return `<p class="hint">기록이 더 필요합니다 (${h.samples}/5). 체크인과 제보가 쌓이면 시간대별 혼잡도를 보여드립니다.</p>`;
+  const now = (new Date().getUTCHours() + 9) % 24, mx = Math.max(...h.hours, 1), hs = [...Array(19).keys()].map(i => i + 5);
+  return `<div class="chart">${hs.map(x => `<i class="${x === now ? 'on' : ''}" style="height:${Math.max(4, h.hours[x] / mx * 100)}%" title="${x}시 평균 ${h.hours[x]}명"></i>`).join('')}</div>
+    <div class="axis"><span>5시</span><span>12시</span><span>18시</span><span>23시</span></div>`;
+}
+const CONDS = {lights_on: '조명 켜짐', lights_off: '조명 꺼짐', wet: '바닥 젖음', waiting: '대기팀 있음', ball: '공 빌려줌'};
+
+async function courtView(id) {
+  const [c, fits] = await Promise.all([api('api/courts/' + id), api('api/fits?court_id=' + encodeURIComponent(id))]);
+  const st = status(c), here = nickname && c.people_list.includes(nickname);
+  topbar({title: c.name, back: true, right: `<button class="ib" id="sh" aria-label="공유">${I.share}</button>`});
+  const shareFn = async () => {
+    const data = {title: `${c.name} · 코트 한눈에`, text: st.known ? `${c.name} 지금 ${c.people}명 (${st.label})` : `${c.name} 현황`, url: location.href.split('#')[0] + '#/c/' + c.id};
+    try { if (navigator.share) await navigator.share(data); else { await navigator.clipboard.writeText(data.url); toast('링크를 복사했습니다'); } } catch (e) {}
+  };
+  $('#sh').onclick = shareFn;
+  const q = encodeURIComponent(c.map_query), facts = [['위치', c.address], ['골대', c.hoops], ['바닥', c.surface], ['조명', c.lights], ['메모', c.note]].filter(x => x[1]);
+  view.innerHTML = `
+    <div class="sum"><div class="top1"><span class="area">${esc(c.area)} · 현재 인원</span><span class="tag ${st.key}">${st.label}</span></div>
+      <div class="bigrow"><b class="n ${st.key}">${st.known ? c.people : '–'}</b><span>명</span></div>
+      ${seg(c, st, true)}<div class="fresh">${st.hint} · ${freshness(c)}</div>
+      ${c.conditions.length ? `<div class="tg">${c.conditions.map(x => `<span class="tag acc">${esc(x.label)} · ${ago(x.ago)}</span>`).join('')}</div>` : ''}</div>
+    <div class="pad" style="margin-top:12px"><button class="btn ${here ? 'dark' : ''}" id="ci">${here ? '체크아웃 · 떠납니다' : '체크인 · 도착했습니다'}</button>
+      <div class="duo"><button class="btn line sm" id="rp">인원 제보</button><button class="btn line sm" id="sh2">링크 공유</button></div></div>
+    ${sec('현장 상태')}<p class="hint">지금 상황을 눌러 알려 주십시오. 2시간 동안 표시됩니다.</p>
+    <div class="cond">${Object.entries(CONDS).map(([k, l]) => `<button class="chip ${c.conditions.some(x => x.tag === k) ? 'on acc' : ''}" data-cond="${k}">${l}</button>`).join('')}</div>
+    <div class="sep"></div>
+    ${sec('게임 모집', c.posts.length)}
+    <div style="margin-top:6px;border-top:1px solid var(--line)">${c.posts.map(p => gameCard(p, true)).join('') || `<div class="empty" style="padding:28px 16px"><b>열린 게임이 없습니다</b>혼자 오셨다면 먼저 모집해 보십시오</div>`}</div>
+    <div class="pad" style="margin-top:14px"><button class="btn line sm" id="np">게임 모집하기</button></div>
+    <div class="sep"></div>
+    ${sec('이 코트의 착장', fits.length)}
+    ${c.top_shoes.length ? `<div class="rank">${c.top_shoes.map((s, i) => `<div class="rk"><span class="no n">${i + 1}</span><b>${esc(s.shoes)}</b><span>${s.n}명${s.grip ? ` · 접지 ${s.grip}` : ''}</span></div>`).join('')}</div>` : `<p class="hint">아직 올라온 착장이 없습니다. 오늘 신고 오신 신발을 남겨 주십시오.</p>`}
+    ${fits.slice(0, 3).map(f => fitCard(f, false)).join('')}
+    <div class="pad" style="margin-top:14px"><button class="btn line sm" id="nf">착장 올리기</button></div>
+    <div class="sep"></div>
+    ${sec('시간대별 혼잡도')}${chart(c.hourly)}
+    <div class="sep"></div>
+    ${sec('코트 정보')}
+    <dl class="kv">${facts.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join('')}</dl>
+    <div class="links"><a href="https://map.naver.com/p/search/${q}" target="_blank" rel="noopener noreferrer">네이버 지도</a><a href="https://map.kakao.com/link/search/${q}" target="_blank" rel="noopener noreferrer">카카오맵</a>${c.phone ? `<a href="tel:${esc(c.phone)}">전화 문의</a>` : `<span style="opacity:.35">전화 없음</span>`}</div>
+    <p class="notes">이용료·예약·사용 제한은 방문 전에 지도 앱이나 관리 주체에 확인해 주십시오. 비어 있는 항목은 아직 확인되지 않은 정보입니다.</p>`;
+  $('#ci').onclick = () => withNick(() => act(() => api(`api/courts/${id}/${here ? 'checkout' : 'checkin'}`, 'POST', {nickname}), here ? '체크아웃했습니다' : '체크인했습니다. 즐거운 경기 되십시오'));
+  $('#sh2').onclick = shareFn; $('#rp').onclick = () => reportSheet(id, c);
+  $('#np').onclick = () => withNick(() => gameSheet(id)); $('#nf').onclick = () => withNick(() => fitSheet(id));
+  view.querySelectorAll('[data-cond]').forEach(b => b.onclick = () => act(() => api(`api/courts/${id}/condition`, 'POST', {tag: b.dataset.cond}), '알려 주셔서 감사합니다'));
+  bindGames(); bindFits(); bindGo(); fab(null); nav('', 0);
+}
+
+/* ---------- 시트: 제보 / 게임 / 착장 ---------- */
+function reportSheet(id, c) {
+  let n = c.people || 0;
+  openSheet(`<h4>지금 몇 명 있습니까?</h4><div class="sub">${esc(c.name)} · 체크인하지 않은 인원까지 세어 주십시오. 30분간 반영됩니다.</div>
+    <div class="step"><button id="mn" aria-label="줄이기">−</button><output id="no" class="n">${n}</output><button id="pl" aria-label="늘리기">+</button></div>
+    <div class="quick">${[0, 2, 4, 6, 8, 10, 14].map(v => `<button data-v="${v}">${v}</button>`).join('')}</div>
+    <div style="height:18px"></div><button class="btn" id="go">제보하기</button>`, s => {
+    const o = s.querySelector('#no'), set = v => { n = Math.max(0, Math.min(40, v)); o.textContent = n; };
+    s.querySelector('#mn').onclick = () => set(n - 1); s.querySelector('#pl').onclick = () => set(n + 1);
+    s.querySelectorAll('[data-v]').forEach(b => b.onclick = () => set(+b.dataset.v));
+    s.querySelector('#go').onclick = () => { closeSheet(); act(() => api(`api/courts/${id}/report`, 'POST', {count: n}), '제보가 완료되었습니다. 감사합니다'); };
+  });
+}
+const courtOptions = sel => `<option value="">코트 선택 안 함</option>` + courts.map(c => `<option value="${c.id}" ${c.id === sel ? 'selected' : ''}>${esc(c.name)}</option>`).join('');
+const LEVELS = ['누구나', '입문', '초급', '중급', '상급'], FORMATS = ['3vs3', '5vs5', '자유'], CAP = {'3vs3': 6, '5vs5': 10, '자유': 8};
+
+async function gameSheet(cid, date) {
+  if (!courts.length) await loadCourts();
+  let fmt = '5vs5', level = '누구나', cap = CAP[fmt];
+  const days = Array.from({length: 14}, (_, i) => ymd(kst(i)));
+  const hh = kst().toISOString().slice(11, 13), nextHour = String(Math.min(23, +hh + 1)).padStart(2, '0') + ':00';
+  openSheet(`<h4>게임 모집</h4><div class="sub">경기 시작 3시간 뒤까지 목록에 표시됩니다.</div>
+    ${cid ? '' : `<label class="field"><span>코트</span><select class="in" id="pc">${courtOptions('').replace('코트 선택 안 함', '코트를 선택해 주십시오')}</select></label>`}
+    <label class="field"><span>제목</span><input class="in" id="pt" maxlength="60" placeholder="예) 5대5 한 판 뛰실 분"></label>
+    <div class="two"><label class="field"><span>날짜</span><select class="in" id="pd">${days.map((d, i) => `<option value="${d}" ${d === (date || days[0]) ? 'selected' : ''}>${i === 0 ? '오늘 · ' : i === 1 ? '내일 · ' : ''}${fmtDate(d)}</option>`).join('')}</select></label>
+    <label class="field"><span>시간</span><input class="in" id="ptm" type="time" value="${nextHour}"></label></div>
+    <div class="field"><span>형식</span><div class="opts" id="of"></div></div>
+    <div class="field"><span>레벨</span><div class="opts" id="ol"></div></div>
+    <label class="field"><span>전체 인원 (본인 포함)</span><input class="in" id="pn" type="number" min="2" max="30" value="${cap}" inputmode="numeric"></label>
+    <label class="field"><span>오픈채팅 링크 (선택)</span><input class="in" id="pl" maxlength="200" placeholder="https://open.kakao.com/..." inputmode="url"></label>
+    <div style="height:18px"></div><button class="btn" id="go">올리기</button>`, s => {
+    opts(s.querySelector('#of'), FORMATS, fmt, v => { fmt = v; s.querySelector('#pn').value = CAP[v]; });
+    opts(s.querySelector('#ol'), LEVELS, level, v => { level = v; });
+    s.querySelector('#pt').focus();
+    s.querySelector('#go').onclick = () => {
+      const court = cid || s.querySelector('#pc').value; if (!court) return toast('코트를 선택해 주십시오');
+      api(`api/courts/${court}/posts`, 'POST', {nickname, title: s.querySelector('#pt').value, play_date: s.querySelector('#pd').value, play_time: s.querySelector('#ptm').value,
+        capacity: parseInt(s.querySelector('#pn').value, 10) || 2, fmt, level, link: s.querySelector('#pl').value})
+        .then(() => { closeSheet(); toast('등록했습니다'); gdate = s.querySelector('#pd').value; render(); }).catch(e => toast(e.message));
+    };
+  });
+}
+
+function compress(file, max = 960) {
+  return new Promise((res, rej) => {
+    const url = URL.createObjectURL(file), img = new Image();
+    img.onload = () => {
+      const k = Math.min(1, max / Math.max(img.width, img.height)), cv = document.createElement('canvas');
+      cv.width = Math.round(img.width * k); cv.height = Math.round(img.height * k);
+      cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height); URL.revokeObjectURL(url);
+      res(cv.toDataURL('image/jpeg', .78));   // 재인코딩하므로 위치 등 EXIF 정보는 제거됩니다
+    };
+    img.onerror = () => rej(new Error('사진을 읽을 수 없습니다')); img.src = url;
+  });
+}
+async function fitSheet(cid) {
+  if (!courts.length) await loadCourts();
+  let grip = 0, photo = '';
+  openSheet(`<h4>착장 올리기</h4><div class="sub">오늘 신으신 신발과 복장을 남겨 주십시오. 신발 외에는 비워 두셔도 됩니다.</div>
+    <label class="field"><span>코트</span><select class="in" id="fc">${courtOptions(cid || '')}</select></label>
+    <label class="field"><span>신발 *</span><input class="in" id="fs" maxlength="50" placeholder="예) 나이키 KD 16"></label>
+    <div class="two"><label class="field"><span>사이즈</span><input class="in" id="fz" maxlength="12" placeholder="270"></label>
+    <div class="field"><span>접지력 (1~5)</span><div class="opts" id="fg"></div></div></div>
+    <label class="field"><span>상의</span><input class="in" id="ft" maxlength="40" placeholder="예) 흰 슬리브리스"></label>
+    <div class="two"><label class="field"><span>하의</span><input class="in" id="fb" maxlength="40" placeholder="예) 검정 반바지"></label>
+    <label class="field"><span>기타</span><input class="in" id="fe" maxlength="60" placeholder="양말·보호대"></label></div>
+    <label class="field"><span>한 줄 후기</span><input class="in" id="fcm" maxlength="120" placeholder="이 코트에서 신어보니…"></label>
+    <div class="field"><span>사진 (선택)</span><div class="photo"><div class="pv" id="pv">없음</div><label class="b" style="cursor:pointer">사진 고르기<input id="fp" type="file" accept="image/*" hidden></label></div></div>
+    <p class="hint" style="margin:10px 0 0">얼굴이 나온 사진은 본인 사진만 올려 주십시오. 사진의 위치 정보는 자동으로 삭제됩니다.</p>
+    <div style="height:18px"></div><button class="btn" id="go">올리기</button>`, s => {
+    const g = s.querySelector('#fg');
+    g.innerHTML = [1, 2, 3, 4, 5].map(n => `<button data-g="${n}" style="padding:0 13px">${n}</button>`).join('');
+    g.querySelectorAll('button').forEach(b => b.onclick = () => { grip = grip === +b.dataset.g ? 0 : +b.dataset.g; g.querySelectorAll('button').forEach(x => x.classList.toggle('on', +x.dataset.g === grip)); });
+    s.querySelector('#fp').onchange = async e => {
+      const f = e.target.files[0]; if (!f) return;
+      try { photo = await compress(f); s.querySelector('#pv').innerHTML = `<img src="${photo}" alt="">`; } catch (err) { toast(err.message); }
+    };
+    s.querySelector('#fs').focus();
+    s.querySelector('#go').onclick = () => {
+      const v = id => s.querySelector('#' + id).value;
+      api('api/fits', 'POST', {nickname, court_id: v('fc'), shoes: v('fs'), shoe_size: v('fz'), top: v('ft'), bottom: v('fb'), extra: v('fe'), comment: v('fcm'), grip, photo})
+        .then(() => { closeSheet(); toast('등록했습니다'); render(); }).catch(e => toast(e.message));
+    };
+  });
+}
+
+/* ---------- 게임 / 착장 / 내 정보 ---------- */
+let gdate = ymd(kst()), gfmt = '전체', glevel = '전체', ghideFull = false;
+async function gamesView() {
+  topbar({right: meBtn()}); bindMe();
+  const ps = await api('api/posts');
+  if (gdate < ymd(kst())) gdate = ymd(kst());
+  const days = Array.from({length: 14}, (_, i) => ymd(kst(i))), cnt = {}; ps.forEach(p => { const d = (p.play_at || '').slice(0, 10); cnt[d] = (cnt[d] || 0) + 1; });
+  const list = ps.filter(p => (p.play_at || '').slice(0, 10) === gdate && (gfmt === '전체' || p.fmt === gfmt) && (glevel === '전체' || p.level === glevel || p.level === '누구나') && !(ghideFull && p.capacity - p.joined.length <= 0));
+  view.innerHTML = `
+    <h1 class="h1">같이 뛸 사람을<br>찾아보십시오</h1>
+    <div class="dates">${days.map((d, i) => { const dt = new Date(d + 'T00:00:00Z'), w = dt.getUTCDay();
+      return `<button class="dt ${d === gdate ? 'on' : ''} ${w === 6 ? 'sat' : w === 0 ? 'sun' : ''}" data-d="${d}"><span>${i === 0 ? '오늘' : WD[w]}</span><b class="n">${dt.getUTCDate()}</b>${cnt[d] ? '<i></i>' : ''}</button>`; }).join('')}</div>
+    <div class="chips" style="padding-top:6px">${['전체', ...FORMATS].map(f => `<button class="chip ${f === gfmt ? 'on' : ''}" data-fm="${f}">${f === '전체' ? '형식 전체' : f}</button>`).join('')}
+      ${['전체', '입문', '초급', '중급', '상급'].map(f => `<button class="chip ${f === glevel ? 'on' : ''}" data-lv="${f}">${f === '전체' ? '레벨 전체' : f}</button>`).join('')}</div>
+    <div class="tgl"><span>${fmtDate(gdate)} · <b style="color:var(--ink)">${list.length}</b>건</span><button class="row" id="hf" style="display:flex;align-items:center;gap:8px">마감 가리기<span class="sw ${ghideFull ? 'on' : ''}"></span></button></div>
+    <div style="border-top:1px solid var(--line)">${list.map(p => gameCard(p, false)).join('') || `<div class="empty"><b>이 날짜에 열린 게임이 없습니다</b>직접 모집해 보십시오</div>`}</div>`;
+  view.querySelectorAll('[data-d]').forEach(b => b.onclick = () => { gdate = b.dataset.d; render(); });
+  view.querySelectorAll('[data-fm]').forEach(b => b.onclick = () => { gfmt = b.dataset.fm; render(); });
+  view.querySelectorAll('[data-lv]').forEach(b => b.onclick = () => { glevel = b.dataset.lv; render(); });
+  $('#hf').onclick = () => { ghideFull = !ghideFull; render(); };
+  const on = view.querySelector('.dt.on'); if (on) on.scrollIntoView({inline: 'center', block: 'nearest'});
+  bindGames(); fab('게임 모집', () => withNick(() => gameSheet('', gdate))); nav('games', ps.length);
+}
+
+async function fitView() {
+  topbar({right: meBtn()}); bindMe();
+  const fs = await api('api/fits');
+  view.innerHTML = `
+    <h1 class="h1">오늘 어떤 신발로<br>뛰셨습니까?</h1><p class="lead">코트 바닥마다 맞는 신발이 다릅니다. 신발·복장·접지력을 남기고 다른 이용자의 기록을 참고해 주십시오.</p>
+    <div class="banner" style="margin-top:14px"><img src="img/shoes.jpg" alt="" style="object-position:50% 70%"></div>
+    ${sec('코트 바닥별 신발 가이드')}
+    <div class="guide">
+      <div><b>고무 · 우레탄 바닥</b>접지가 좋아 미끄러짐은 적지만 급정지 시 발목에 무리가 갈 수 있습니다. 발목을 잘 잡아 주는 신발이 편합니다. (망원한강공원, 뚝섬한강공원)</div>
+      <div><b>아스팔트 · 콘크리트 바닥</b>밑창이 빨리 닳고 충격이 큽니다. 쿠셔닝과 내구성이 좋은 아웃도어용 농구화를 권합니다. (반포한강공원)</div>
+      <div><b>비 온 뒤</b>바닥이 미끄러우니 무리한 컷인은 피하십시오. 코트 화면의 "바닥 젖음" 제보를 확인해 보십시오.</div>
+    </div><p class="hint">일반적인 가이드입니다. 코트 상태는 시기에 따라 달라질 수 있습니다.</p>
+    <div class="sep"></div>${sec('최근 착장', fs.length)}
+    <div style="margin-top:6px;border-top:1px solid var(--line)">${fs.map(f => fitCard(f)).join('') || `<div class="empty"><b>아직 올라온 착장이 없습니다</b>첫 번째 착장을 남겨 주십시오</div>`}</div>`;
+  bindFits(); bindGo(); fab('착장 올리기', () => withNick(() => fitSheet(''))); nav('fit', 0);
+}
+
+async function meView() {
+  topbar({});
+  const cr = await fetch('img/credits.json').then(r => r.json()).catch(() => ({}));
+  const [m, mf] = nickname ? await Promise.all([api('api/me?nickname=' + encodeURIComponent(nickname)), api('api/me/fits?nickname=' + encodeURIComponent(nickname))]) : [{checkin: null, posts: []}, []];
+  view.innerHTML = `
+    <h1 class="h1">${esc(nickname || '닉네임이 없습니다')}</h1>
+    <p class="lead">${nickname ? '코트에서 이 이름으로 표시됩니다' : '닉네임을 정하면 체크인·참가·착장 등록을 할 수 있습니다'}</p>
+    <div class="pad" style="margin-top:14px"><button class="btn line sm" id="ed">${nickname ? '닉네임 변경' : '닉네임 정하기'}</button></div>
+    <div class="sep"></div>${sec('현재 체크인')}
+    ${m.checkin ? `<button class="crow" data-go="c/${m.checkin.court_id}" style="margin-top:6px;border-top:1px solid var(--line)"><div class="r1"><div class="cn">${esc(m.checkin.name)}</div><span class="cm">보기 ›</span></div><div class="cm">${ago(m.checkin.ago)} 체크인 · 3시간 뒤 자동 해제</div></button>` : `<div class="empty" style="padding:24px 16px">체크인 중인 코트가 없습니다</div>`}
+    <div class="sep"></div>${sec('내가 참가한 게임', m.posts.length)}
+    <div style="margin-top:6px;border-top:1px solid var(--line)">${m.posts.map(p => gameCard(p, true)).join('') || `<div class="empty" style="padding:24px 16px">참가 중인 게임이 없습니다</div>`}</div>
+    <div class="sep"></div>${sec('내 착장', mf.length)}
+    <div style="margin-top:6px;border-top:1px solid var(--line)">${mf.map(f => fitCard(f)).join('') || `<div class="empty" style="padding:24px 16px">올린 착장이 없습니다</div>`}</div>
+    <div class="sep"></div>${sec('이용 안내')}
+    <div class="notes" style="padding-top:10px"><b style="color:var(--ink)">혼잡도</b> 체크인한 사람 수와 최근 30분 제보 중 큰 값입니다. 5명 미만은 한산, 10명 미만은 보통, 10명 이상은 혼잡입니다.<br>
+      <b style="color:var(--ink)">자동 정리</b> 체크인은 3시간, 현장 상태는 2시간 뒤 사라지며, 게임은 시작 3시간 뒤 목록에서 제외됩니다.<br>
+      <b style="color:var(--ink)">홈 화면에 추가</b> 브라우저 메뉴에서 "홈 화면에 추가"를 누르면 앱처럼 사용할 수 있습니다.<br>
+      <b style="color:var(--ink)">주의</b> 이용자 제보 기반이므로 실제와 다를 수 있습니다. 전화번호 등 개인정보는 글에 쓰지 마십시오.<br><br>
+      <b style="color:var(--ink)">사진 출처</b> 화면의 사진은 모두 CC0(저작권 제한 없음)이며, 실제 코트 사진이 아닌 분위기용 이미지입니다.<br>
+      ${Object.values(cr).map(c => `${esc(c.artist)} · <a href="${esc(c.page)}" target="_blank" rel="noopener noreferrer" style="text-decoration:underline">${esc(c.license)}</a>`).join('<br>')}</div>`;
+  $('#ed').onclick = () => nickSheet(); bindGo(); bindGames(); bindFits(); fab(null); nav('me', 0);
+}
+
+/* ---------- 라우터 ---------- */
+let busy = false;
+async function render() {
+  if (busy) return; busy = true;
+  const y = scrollY, h = location.hash.replace(/^#\/?/, '');
+  try {
+    if (h.startsWith('c/')) await courtView(h.slice(2));
+    else if (h === 'games') await gamesView();
+    else if (h === 'fit') await fitView();
+    else if (h === 'me') await meView();
+    else await homeView();
+    scrollTo(0, y);
+  } catch (e) {
+    view.innerHTML = `<div class="empty"><b>불러오지 못했습니다</b>${esc(e.message)}<br><br><button class="btn line sm" style="width:auto;display:inline-flex;padding:0 22px" onclick="render()">다시 시도</button></div>`;
+  } finally { busy = false; }
+}
+addEventListener('hashchange', () => { closeSheet(); scrollTo(0, 0); render(); });
+setInterval(() => { if (!sheetOpen && !document.hidden) render(); }, 25000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden && !sheetOpen) render(); });
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+render();
+</script>
+</body>
+</html>
